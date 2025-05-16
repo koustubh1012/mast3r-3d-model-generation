@@ -12,7 +12,6 @@
 - 🤖 Transformer-based feature matching and depth refinement
 - 🔧 Automatic camera pose optimization
 - 🌍 Outputs textured 3D meshes in **.glb** format
-- 🐳 Docker setup for CPU or GPU (CUDA) inference
 - 🧪 Ready-to-use test script for one-line model generation
 
 ---
