@@ -4,12 +4,18 @@ import torch
 import argparse
 import tempfile
 import shutil
+import time
+
+# Dynamically add the root of the repository to sys.path
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.join(CURRENT_DIR, 'mast3r')
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
 
 # MASt3R & Dust3R imports
 from mast3r.model import AsymmetricMASt3R
 from mast3r.demo import get_reconstructed_scene
-# from dust3r.utils.image import load_images
-import time
+# from dust3r.utils.image import load_images  # Uncomment if needed
 
 
 def run_mast3r(image_dir, output_glb_path, weights_path, device='cuda'):
@@ -31,7 +37,6 @@ def run_mast3r(image_dir, output_glb_path, weights_path, device='cuda'):
 
     # Load model
     print("🔄 Loading MASt3R model...")
-    print("Loading MASt3R model...")
     model = AsymmetricMASt3R.from_pretrained(weights_path).to(device).eval()
 
     # Create temporary working directory
@@ -80,6 +85,7 @@ def run_mast3r(image_dir, output_glb_path, weights_path, device='cuda'):
         print(f"✅ Exported GLB model to: {output_glb_path}")
     else:
         print("❌ Failed to generate GLB file.")
+
     # Clean up temporary directory
     shutil.rmtree(tmp_dir)
     print(f"🗑️ Cleaned up temporary directory: {tmp_dir}")
@@ -87,10 +93,16 @@ def run_mast3r(image_dir, output_glb_path, weights_path, device='cuda'):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate GLB file using MASt3R")
-    parser.add_argument('--image_dir', type=str, required=False, help="Path to directory with input images",default="/home/koustubh/test/")
-    parser.add_argument('--output', type=str, default='output_model.glb', help="Path to save the output .glb file")
-    parser.add_argument('--weights', type=str, required=False, help="Path to MASt3R weights (.pth)", default="naver/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric")
-    parser.add_argument('--device', type=str, default='cuda', help="Device to run on: 'cuda' or 'cpu'")
+    parser.add_argument('--image_dir', type=str, required=False,
+                        help="Path to directory with input images",
+                        default="/home/koustubh/test/")
+    parser.add_argument('--output', type=str, default='output_model.glb',
+                        help="Path to save the output .glb file")
+    parser.add_argument('--weights', type=str, required=False,
+                        help="Path to MASt3R weights (.pth)",
+                        default="naver/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric")
+    parser.add_argument('--device', type=str, default='cuda',
+                        help="Device to run on: 'cuda' or 'cpu'")
 
     args = parser.parse_args()
     run_mast3r(args.image_dir, args.output, args.weights, args.device)
