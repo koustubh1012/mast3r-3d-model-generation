@@ -10,6 +10,7 @@ conda create -n mast3r python=3.11 cmake=3.14.0 -y
 conda activate mast3r
 
 conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia -y
+conda install -c conda-forge faiss-gpu -y
 
 cd mast3r
 
@@ -28,7 +29,5 @@ cd ..
 cd dust3r/croco/models/curope/
 python3 setup.py build_ext --inplace
 cd ../../../../
-
-conda install -c conda-forge faiss-gpu -y
 
 echo "Build complete."
